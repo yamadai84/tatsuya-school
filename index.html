@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2d2d2d">
+<title>TATSUYA ONLINE SCHOOL 会員サイト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2d2d2d;
+    --black: #141414;
+    --gold: #ebbe44;
+    --gold-light: #efd049;
+    --gold-dark: #a68c19;
+    --cream: #fffde7;
+    --gray: #eeeeee;
+    --line: #dddddd;
+    --muted: #6b6b6b;
+    --red: #d81b4a;
+    --white: #ffffff;
+    --latin: 'Anton', 'Arial Black', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  a { color: inherit; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+
+  /* ログイン */
+  .login {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: var(--black);
+    overflow: hidden;
+  }
+  .login-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://storage.googleapis.com/studio-design-asset-files/projects/1YWjpKbMqm/s-939x1174_v-fs_webp_91c98703-a7fa-478e-b8bc-986b52932687.webp') center 20% / cover no-repeat;
+    opacity: .45;
+    filter: blur(2px);
+    transform: scale(1.03);
+  }
+  .login-card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    padding: 32px 28px;
+    background: var(--white);
+  }
+  .login-logo { display: block; width: 136px; height: auto; margin-bottom: 20px; }
+  .login-title { margin: 0; font-family: var(--latin); font-weight: 400; font-size: 34px; line-height: 1.15; letter-spacing: .01em; }
+  .login-sub { margin: 4px 0 24px; font-weight: 700; font-size: 14px; }
+  .field { display: block; margin-bottom: 16px; }
+  .field span { display: block; margin-bottom: 4px; font-weight: 700; font-size: 13px; }
+  .field input {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    font-size: 16px;
+    border: 1px solid #bdbdbd;
+    border-radius: 0;
+    background: var(--white);
+  }
+  .show-pass { display: flex; align-items: center; gap: 8px; margin: -6px 0 20px; font-size: 13px; cursor: pointer; }
+  .btn {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 16px;
+    border: 0;
+    background: var(--ink);
+    color: var(--white);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--black); }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .error { margin: 0 0 16px; padding: 10px 12px; background: #fdecef; color: #a3123a; font-size: 13px; font-weight: 500; }
+  .login-help { margin: 16px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+  /* 共通レイアウト */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--gray);
+  }
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 880px;
+    height: 56px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .topbar img { display: block; width: 112px; height: auto; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 12px; }
+  .member-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 500; }
+  .logout { flex: none; padding: 4px 10px; border: 1px solid var(--ink); background: transparent; font-size: 12px; cursor: pointer; }
+  .logout:hover { background: var(--ink); color: var(--white); }
+
+  .hero {
+    background: var(--black);
+    color: var(--white);
+    padding: 22px 16px 20px;
+  }
+  .hero-inner { max-width: 848px; margin: 0 auto; }
+  .hero h1 { margin: 0; font-family: var(--latin); font-weight: 400; font-size: clamp(26px, 6vw, 40px); line-height: 1.15; letter-spacing: .01em; }
+
+  .tabs { background: var(--black); border-top: 1px solid #333; }
+  .tabs-inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 880px; margin: 0 auto; }
+  .tab {
+    position: relative;
+    display: block;
+    padding: 10px 2px 11px;
+    color: #cfcfcf;
+    text-align: center;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+  }
+  .tab b { display: block; font-family: var(--latin); font-weight: 400; font-size: 17px; line-height: 1.25; letter-spacing: .03em; }
+  .tab small { display: block; font-size: 11px; line-height: 1.4; font-weight: 500; }
+  .tab:hover { color: var(--white); }
+  .tab[aria-current="page"] { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+  .tab .dot { position: absolute; top: 8px; right: calc(50% - 30px); width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 24px 16px 56px; }
+  .panel { background: var(--white); padding: 28px 20px 32px; }
+  @media (min-width: 640px) { .panel { padding: 40px 40px 44px; } }
+
+  .section-head { margin: 0 0 22px; }
+  .section-head h2 { display: flex; align-items: center; gap: 6px; margin: 0; font-family: var(--latin); font-weight: 400; font-size: 34px; line-height: 1.15; letter-spacing: .01em; }
+  .section-head h2::before { content: '★'; color: var(--gold); font-family: 'Noto Sans JP', sans-serif; font-size: 26px; }
+  .section-head p { margin: 2px 0 0; font-weight: 700; font-size: 14px; }
+
+  .marker { display: inline-block; padding: 0 10px; background: var(--gold-light); font-weight: 700; font-size: 15px; line-height: 1.9; }
+  .notice { margin: 0 0 24px; padding: 12px 14px; background: var(--cream); border: 1px solid var(--gold); font-size: 13px; line-height: 1.7; }
+  .empty { padding: 28px 12px; color: var(--muted); text-align: center; font-size: 14px; }
+
+  /* 映像配信 */
+  .year-block + .year-block { margin-top: 28px; }
+  .year-label { margin: 0 0 12px; }
+  .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  @media (min-width: 560px) { .video-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 760px) { .video-grid { grid-template-columns: repeat(4, 1fr); } }
+  .video-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 136px;
+    padding: 14px 10px 26px;
+    overflow: hidden;
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    text-decoration: none;
+    transition: transform .15s, background .15s;
+  }
+  .video-tile:hover { background: #000; transform: translateY(-2px); }
+  .video-tile .ghost {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -54%);
+    color: #2a2a2a;
+    font-family: var(--latin);
+    font-size: 96px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .video-tile > * { position: relative; }
+  .video-tile > .ghost { position: absolute; }
+  .video-month { font-weight: 900; font-size: 22px; line-height: 1.3; }
+  .video-title { margin-top: 4px; font-weight: 500; font-size: 12px; line-height: 1.5; }
+  .video-note { margin-top: 2px; color: #bdbdbd; font-size: 11px; line-height: 1.5; }
+  .video-tile .tile-star { position: absolute; left: 0; right: 0; bottom: 6px; color: var(--gold); font-size: 13px; line-height: 1.4; }
+  .chip-new { position: absolute; top: 0; left: 0; padding: 0 8px; background: var(--gold-light); color: var(--black); font-family: var(--latin); font-size: 13px; line-height: 1.7; letter-spacing: .04em; }
+
+  /* ステップリスト */
+  .step-tools { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; }
+  @media (min-width: 560px) { .step-tools { grid-template-columns: 1fr 170px; } }
+  .step-tools input, .step-tools select { width: 100%; height: 46px; padding: 0 12px; font-size: 16px; border: 1px solid #bdbdbd; border-radius: 0; background: var(--white); }
+  .step-view { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 12px; border: 1px solid var(--ink); }
+  .step-view button { min-height: 44px; border: 0; background: var(--white); font-weight: 700; font-size: 14px; cursor: pointer; }
+  .step-view button[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+  .step-count { margin: 0 0 14px; color: var(--muted); font-size: 13px; }
+  .step-flat { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); padding-bottom: 0; }
+  .step-flat .step:first-child { border-top: 0; }
+  .step-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .step-date { margin: 0 0 1px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+  .step-video {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 12px;
+    background: var(--ink);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 12px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .step-video:hover { background: var(--black); color: var(--gold-light); }
+  .step-month { border-top: 2px solid var(--ink); }
+  .step-month:last-of-type { border-bottom: 2px solid var(--ink); }
+  .step-month > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 4px;
+    list-style: none;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .step-month > summary::-webkit-details-marker { display: none; }
+  .step-month > summary::after { content: '＋'; color: var(--gold-dark); font-weight: 700; }
+  .step-month[open] > summary::after { content: '－'; }
+  .step-month > summary small { margin-left: 8px; color: var(--muted); font-weight: 400; font-size: 12px; }
+  .step-list { margin: 0; padding: 0 0 8px; list-style: none; }
+  .step { display: grid; grid-template-columns: 42px 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .step-no { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: var(--gold-light); font-family: var(--latin); font-size: 19px; }
+  .step-name { margin: 0; font-weight: 700; font-size: 16px; line-height: 1.5; }
+  .step-tag { display: inline-block; margin-left: 6px; padding: 0 6px; background: var(--black); color: var(--white); font-weight: 500; font-size: 10px; line-height: 1.8; vertical-align: 2px; white-space: nowrap; }
+  .step-point { margin: 4px 0 0; font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
+
+  /* コラム */
+  .column-list { margin: 0; padding: 0; list-style: none; }
+  .column-card {
+    display: block;
+    padding: 18px 2px;
+    border-top: 1px solid var(--line);
+    text-decoration: none;
+  }
+  .column-list li:last-child .column-card { border-bottom: 1px solid var(--line); }
+  .column-card:hover .column-title { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .meta { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .badge-new { padding: 0 6px; background: var(--red); color: var(--white); font-family: var(--latin); font-size: 11px; line-height: 1.6; letter-spacing: .05em; }
+  .column-title { display: block; margin-top: 2px; font-weight: 700; font-size: 17px; line-height: 1.55; }
+  .column-excerpt { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .back { display: inline-block; margin-bottom: 18px; font-weight: 700; font-size: 13px; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  .article-title { margin: 4px 0 22px; padding-bottom: 14px; border-bottom: 3px solid var(--gold-light); font-weight: 900; font-size: 23px; line-height: 1.5; }
+  .article { overflow-wrap: anywhere; }
+  .article p { margin: 0 0 1.2em; }
+  .article h2 { margin: 1.8em 0 .6em; font-size: 20px; line-height: 1.5; }
+  .article h3 { margin: 1.6em 0 .5em; padding-left: 10px; border-left: 4px solid var(--gold); font-size: 17px; line-height: 1.5; }
+  .article h4 { margin: 1.4em 0 .4em; font-size: 15px; }
+  .article ul, .article ol { margin: 0 0 1.2em; padding-left: 1.5em; }
+  .article ul ul, .article ul ol, .article ol ul, .article ol ol { margin-bottom: 0; }
+  .article img { display: block; max-width: 100%; height: auto; margin: 0 auto 1.2em; }
+  .article a { color: #8a7112; text-underline-offset: 3px; }
+  .article hr { margin: 2em 0; border: 0; border-top: 1px solid var(--line); }
+  .table-wrap { margin: 0 0 1.2em; overflow-x: auto; }
+  .article table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  .article td { padding: 8px 10px; border: 1px solid var(--line); vertical-align: top; }
+  .article td p { margin: 0; }
+
+  /* お知らせ */
+  .news-list { margin: 0; padding: 0; list-style: none; }
+  .news-item { padding: 18px 2px; border-top: 1px solid var(--line); }
+  .news-item:last-child { border-bottom: 1px solid var(--line); }
+  .news-title { margin: 2px 0 0; font-weight: 700; font-size: 16px; line-height: 1.55; }
+  .news-body { margin: 6px 0 0; font-size: 14px; line-height: 1.8; white-space: pre-line; overflow-wrap: anywhere; }
+  .news-link { display: inline-block; margin-top: 6px; font-weight: 700; font-size: 13px; color: #8a7112; }
+
+  /* 読み込み */
+  .loading { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 40vh; color: var(--white); font-size: 14px; }
+  .panel .loading { min-height: 160px; color: var(--muted); }
+  .spinner { width: 20px; height: 20px; border: 3px solid rgba(235, 190, 68, .3); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .spinner { animation-duration: 2s; }
+    .video-tile { transition: none; }
+    .video-tile:hover { transform: none; }
+  }
+  .retry { max-width: 220px; margin: 16px auto 0; }
+  .footer { padding: 0 16px 32px; color: #a9a9a9; font-size: 11px; text-align: center; }
+</style>
+</head>
+<body>
+
+<section class="login" id="login" hidden>
+  <div class="login-bg" aria-hidden="true"></div>
+  <form class="login-card" id="login-form" novalidate>
+    <img class="login-logo" src="https://storage.googleapis.com/studio-design-asset-files/projects/1YWjpKbMqm/s-942x214_v-fs_webp_b24bfc11-7308-4fd9-8b1e-be94d4cd9a66_small.webp" alt="スキルハック">
+    <h1 class="login-title">TATSUYA<br>ONLINE SCHOOL</h1>
+    <p class="login-sub">会員サイト</p>
+    <p class="error" id="login-error" role="alert" hidden></p>
+    <label class="field">
+      <span>メールアドレス</span>
+      <input type="email" id="email" autocomplete="username" inputmode="email" autocapitalize="off" spellcheck="false" required>
+    </label>
+    <label class="field">
+      <span>パスワード</span>
+      <input type="password" id="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
+    </label>
+    <label class="show-pass"><input type="checkbox" id="show-password">パスワードを表示する</label>
+    <button class="btn" id="login-button" type="submit">ログイン</button>
+    <p class="login-help">パスワードが分からない場合は、運営事務局までお問い合わせください。</p>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <img src="https://storage.googleapis.com/studio-design-asset-files/projects/1YWjpKbMqm/s-942x214_v-fs_webp_b24bfc11-7308-4fd9-8b1e-be94d4cd9a66_small.webp" alt="スキルハック">
+      <div class="topbar-right">
+        <span class="member-name" id="member-name"></span>
+        <button class="logout" id="logout" type="button">ログアウト</button>
+      </div>
+    </div>
+  </header>
+  <div class="hero"><div class="hero-inner"><h1>TATSUYA ONLINE SCHOOL</h1></div></div>
+  <nav class="tabs" aria-label="コンテンツ">
+    <div class="tabs-inner">
+      <a class="tab" href="#movie" data-tab="movie"><b>MOVIE</b><small>映像配信</small></a>
+      <a class="tab" href="#step" data-tab="step"><b>STEP</b><small>ステップリスト</small></a>
+      <a class="tab" href="#column" data-tab="column"><b>COLUMN</b><small>コラム</small></a>
+      <a class="tab" href="#news" data-tab="news"><b>NEWS</b><small>お知らせ</small></a>
+    </div>
+  </nav>
+  <main id="view"></main>
+  <p class="footer">このサイトの内容・映像URLの転載や共有はご遠慮ください。</p>
+</div>
+
+<div class="loading" id="boot"><span class="spinner" aria-hidden="true"></span>読み込み中…</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var TOKEN_KEY = 'tos_member_token';
+  var NEW_DAYS = 14;
+  var STEP_VIEW_KEY = 'tos_step_view';
+  var state = { data: null, columns: {}, stepQuery: '', stepMonth: '', stepView: 'month' };
+  try { if (localStorage.getItem(STEP_VIEW_KEY) === 'list') state.stepView = 'list'; } catch (e) {}
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- 小さな道具 ----------
+
+  function h(tag, attrs, children) {
+    var el = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'class') el.className = attrs[k];
+      else if (k === 'text') el.textContent = attrs[k];
+      else el.setAttribute(k, attrs[k]);
+    });
+    [].concat(children || []).forEach(function (c) {
+      if (c) el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return el;
+  }
+
+  function storeGet() { try { return localStorage.getItem(TOKEN_KEY); } catch (e) { return null; } }
+  function storeSet(v) { try { localStorage.setItem(TOKEN_KEY, v); } catch (e) {} }
+  function storeClear() { try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} }
+
+  function api(body) {
+    return fetch(window.APP_CONFIG.apiUrl, {
+      method: 'POST',
+      // Apps Script は CORS のプリフライトを受けられないので text/plain で送る
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body)
+    }).then(function (res) { return res.json(); });
+  }
+
+  function ymLabel(ym) { return Math.floor(ym / 100) + '年' + (ym % 100) + '月'; }
+  function dateLabel(key) { return key.replace(/-/g, '.'); }
+  function daysSince(key, today) {
+    return (Date.parse(today + 'T00:00:00Z') - Date.parse(key + 'T00:00:00Z')) / 86400000;
+  }
+  function isNew(key) { return daysSince(key, state.data.today) < NEW_DAYS; }
+
+  function panel(enName, jpName, children) {
+    return h('section', { class: 'panel' }, [
+      h('header', { class: 'section-head' }, [h('h2', { text: enName }), h('p', { text: jpName })])
+    ].concat(children));
+  }
+
+  function loadingBlock() {
+    return h('div', { class: 'loading' }, [h('span', { class: 'spinner', 'aria-hidden': 'true' }), '読み込み中…']);
+  }
+
+  // ---------- ログイン ----------
+
+  var LOGIN_ERRORS = {
+    invalid: 'メールアドレスまたはパスワードが正しくありません。',
+    locked: 'ログインに続けて失敗したため、一時的に制限しています。15分ほど待ってからお試しください。'
+  };
+  var GENERAL_ERROR = '接続できませんでした。時間をおいてもう一度お試しください。';
+
+  function showLogin(message) {
+    $('boot').hidden = true;
+    $('app').hidden = true;
+    $('login').hidden = false;
+    $('login-error').hidden = !message;
+    $('login-error').textContent = message || '';
+  }
+
+  $('show-password').addEventListener('change', function (e) {
+    $('password').type = e.target.checked ? 'text' : 'password';
+  });
+
+  $('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = $('email').value.trim();
+    var password = $('password').value;
+    if (!email || !password) {
+      showLogin('メールアドレスとパスワードを入力してください。');
+      return;
+    }
+    var button = $('login-button');
+    button.disabled = true;
+    button.textContent = '確認しています…';
+    api({ action: 'login', email: email, password: password }).then(function (res) {
+      if (!res.ok) { showLogin(LOGIN_ERRORS[res.error] || GENERAL_ERROR); return; }
+      $('password').value = '';
+      enter(res);
+    }).catch(function () {
+      showLogin(GENERAL_ERROR);
+    }).then(function () {
+      button.disabled = false;
+      button.textContent = 'ログイン';
+    });
+  });
+
+  $('logout').addEventListener('click', function () {
+    storeClear();
+    state.data = null;
+    state.columns = {};
+    history.replaceState(null, '', location.pathname);
+    showLogin('');
+  });
+
+  function enter(res) {
+    state.data = res;
+    storeSet(res.token);
+    $('boot').hidden = true;
+    $('login').hidden = true;
+    $('app').hidden = false;
+    $('member-name').textContent = res.member.name + ' さん';
+    var hasNewNews = res.news.some(function (n) { return isNew(n.date); });
+    var newsTab = document.querySelector('[data-tab="news"]');
+    var dot = newsTab.querySelector('.dot');
+    if (hasNewNews && !dot) newsTab.appendChild(h('span', { class: 'dot', 'aria-label': '新着あり' }));
+    if (!hasNewNews && dot) dot.remove();
+    route();
+  }
+
+  // ---------- 画面の切り替え ----------
+
+  window.addEventListener('hashchange', function () {
+    if (state.data) { route(); window.scrollTo(0, 0); }
+  });
+
+  function route() {
+    var parts = location.hash.replace(/^#/, '').split('/');
+    var tab = ['movie', 'step', 'column', 'news'].indexOf(parts[0]) >= 0 ? parts[0] : 'movie';
+    document.querySelectorAll('.tab').forEach(function (a) {
+      if (a.getAttribute('data-tab') === tab) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    var view = $('view');
+    view.textContent = '';
+    if (tab === 'movie') view.appendChild(renderMovies());
+    if (tab === 'step') view.appendChild(renderSteps());
+    if (tab === 'column') view.appendChild(parts[1] ? renderArticle(decodeURIComponent(parts[1])) : renderColumns());
+    if (tab === 'news') view.appendChild(renderNews());
+  }
+
+  // ---------- 映像配信 ----------
+
+  function renderMovies() {
+    var d = state.data;
+    var intro = d.member.joinYm
+      ? h('p', { class: 'notice', text: ymLabel(d.member.joinYm) + '以降の映像をご覧いただけます。ボタンを押すとYouTubeの再生リストが開きます。' })
+      : null;
+    if (!d.videos.length) {
+      return panel('MOVIE', '映像配信', [intro, h('p', { class: 'empty', text: 'ご覧いただける映像はまだありません。' })]);
+    }
+    var latestYm = d.videos[0].ym;
+    var years = [];
+    var byYear = {};
+    d.videos.forEach(function (v) {
+      var y = Math.floor(v.ym / 100);
+      if (!byYear[y]) { byYear[y] = []; years.push(y); }
+      byYear[y].push(v);
+    });
+    var blocks = years.map(function (y) {
+      return h('div', { class: 'year-block' }, [
+        h('p', { class: 'year-label' }, [h('span', { class: 'marker', text: y + '年' })]),
+        h('div', { class: 'video-grid' }, byYear[y].map(function (v) {
+          var month = v.ym % 100;
+          return h('a', { class: 'video-tile', href: v.url, target: '_blank', rel: 'noopener noreferrer' }, [
+            h('span', { class: 'ghost', 'aria-hidden': 'true', text: String(month) }),
+            v.ym === latestYm ? h('span', { class: 'chip-new', text: 'NEW' }) : null,
+            h('span', { class: 'video-month', text: month + '月' }),
+            v.title ? h('span', { class: 'video-title', text: v.title }) : null,
+            v.note ? h('span', { class: 'video-note', text: v.note }) : null,
+            h('span', { class: 'tile-star', 'aria-hidden': 'true', text: '★' })
+          ]);
+        }))
+      ]);
+    });
+    return panel('MOVIE', '映像配信', [intro].concat(blocks));
+  }
+
+  // ---------- ステップリスト ----------
+
+  function renderSteps() {
+    var steps = state.data.steps;
+    var months = [];
+    steps.forEach(function (s) { if (months.indexOf(s.ym) < 0) months.push(s.ym); });
+    months.sort(function (a, b) { return b - a; });
+
+    var search = h('input', { type: 'search', placeholder: '技名・ポイントで検索', 'aria-label': '技名・ポイントで検索' });
+    search.value = state.stepQuery;
+    var select = h('select', { 'aria-label': '月で絞り込み' }, [h('option', { value: '', text: 'すべての月' })].concat(
+      months.map(function (m) { return h('option', { value: String(m), text: ymLabel(m) }); })
+    ));
+    select.value = state.stepMonth;
+    var result = h('div');
+    var viewButtons = [['month', '月別で見る'], ['list', '一覧で見る']].map(function (v) {
+      var button = h('button', { type: 'button', text: v[1] });
+      button.addEventListener('click', function () {
+        state.stepView = v[0];
+        try { localStorage.setItem(STEP_VIEW_KEY, v[0]); } catch (e) {}
+        draw();
+      });
+      return { key: v[0], el: button };
+    });
+
+    function stepItem(s, showMonth) {
+      return h('li', { class: 'step' }, [
+        h('span', { class: 'step-no', text: s.no }),
+        h('div', {}, [
+          showMonth ? h('p', { class: 'step-date', text: ymLabel(s.ym) }) : null,
+          h('div', { class: 'step-head' }, [
+            h('p', { class: 'step-name' }, [s.name, s.tag ? h('span', { class: 'step-tag', text: s.tag }) : null]),
+            s.videoUrl ? h('a', { class: 'step-video', href: s.videoUrl, target: '_blank', rel: 'noopener noreferrer', 'aria-label': s.name + 'の動画を見る', text: '▶ 動画' }) : null
+          ]),
+          s.point ? h('p', { class: 'step-point', text: s.point }) : null
+        ])
+      ]);
+    }
+
+    function draw() {
+      state.stepQuery = search.value;
+      state.stepMonth = select.value;
+      viewButtons.forEach(function (b) { b.el.setAttribute('aria-pressed', String(b.key === state.stepView)); });
+      var q = search.value.trim().toLowerCase();
+      var filtering = !!q || !!select.value;
+      var hits = steps.filter(function (s) {
+        if (select.value && String(s.ym) !== select.value) return false;
+        return !q || (s.name + ' ' + s.point + ' ' + s.tag).toLowerCase().indexOf(q) >= 0;
+      });
+      result.textContent = '';
+      if (!hits.length) {
+        result.appendChild(h('p', { class: 'empty', text: '該当するステップはありません。' }));
+        return;
+      }
+      result.appendChild(h('p', { class: 'step-count', text: '全' + hits.length + '件' }));
+      if (state.stepView === 'list') {
+        result.appendChild(h('ul', { class: 'step-list step-flat' }, hits.map(function (s) { return stepItem(s, true); })));
+        return;
+      }
+      months.forEach(function (m, i) {
+        var inMonth = hits.filter(function (s) { return s.ym === m; });
+        if (!inMonth.length) return;
+        var details = h('details', { class: 'step-month' }, [
+          h('summary', {}, [h('span', {}, [ymLabel(m), h('small', { text: inMonth.length + '件' })])]),
+          h('ul', { class: 'step-list' }, inMonth.map(function (s) { return stepItem(s, false); }))
+        ]);
+        if (filtering || i === 0) details.open = true;
+        result.appendChild(details);
+      });
+    }
+    search.addEventListener('input', draw);
+    select.addEventListener('change', draw);
+    draw();
+    var joinYm = state.data.member.joinYm;
+    return panel('STEP', 'ステップリスト', [
+      joinYm ? h('p', { class: 'notice', text: ymLabel(joinYm) + '以降の技には、動画へのボタンが表示されます。' }) : null,
+      h('div', { class: 'step-view' }, viewButtons.map(function (b) { return b.el; })),
+      h('div', { class: 'step-tools' }, [search, select]),
+      result
+    ]);
+  }
+
+  // ---------- コラム ----------
+
+  function renderColumns() {
+    var columns = state.data.columns;
+    if (!columns.length) return panel('COLUMN', 'コラム', [h('p', { class: 'empty', text: 'コラムはまだありません。' })]);
+    return panel('COLUMN', 'コラム', [h('ul', { class: 'column-list' }, columns.map(function (c) {
+      return h('li', {}, [h('a', { class: 'column-card', href: '#column/' + encodeURIComponent(c.id) }, [
+        h('span', { class: 'meta' }, [dateLabel(c.date), isNew(c.date) ? h('span', { class: 'badge-new', text: 'NEW' }) : null]),
+        h('span', { class: 'column-title', text: c.title }),
+        c.excerpt ? h('span', { class: 'column-excerpt', text: c.excerpt + '…' }) : null
+      ])]);
+    }))]);
+  }
+
+  function renderArticle(id) {
+    var wrap = h('section', { class: 'panel' }, [
+      h('a', { class: 'back', href: '#column', text: '← コラム一覧へ' })
+    ]);
+    var body = h('div', {}, [loadingBlock()]);
+    wrap.appendChild(body);
+
+    function show(res) {
+      body.textContent = '';
+      body.appendChild(h('p', { class: 'meta', text: dateLabel(res.date) }));
+      body.appendChild(h('h2', { class: 'article-title', text: res.title }));
+      var article = h('div', { class: 'article' });
+      // html は Code.gs 側でエスケープし、許可したタグだけで組み立てたもの
+      article.innerHTML = res.html;
+      body.appendChild(article);
+    }
+    function fail(message) {
+      body.textContent = '';
+      body.appendChild(h('p', { class: 'empty', text: message }));
+    }
+
+    if (state.columns[id]) {
+      show(state.columns[id]);
+    } else {
+      api({ action: 'column', token: storeGet() || state.data.token, id: id }).then(function (res) {
+        if (res.ok) { state.columns[id] = res; show(res); return; }
+        if (res.error === 'auth') { sessionExpired(); return; }
+        fail('この記事は表示できません。');
+      }).catch(function () {
+        fail(GENERAL_ERROR);
+      });
+    }
+    return wrap;
+  }
+
+  // ---------- お知らせ ----------
+
+  function renderNews() {
+    var news = state.data.news;
+    if (!news.length) return panel('NEWS', '事務局からのお知らせ', [h('p', { class: 'empty', text: 'お知らせはまだありません。' })]);
+    return panel('NEWS', '事務局からのお知らせ', [h('ul', { class: 'news-list' }, news.map(function (n) {
+      return h('li', { class: 'news-item' }, [
+        h('p', { class: 'meta' }, [dateLabel(n.date), isNew(n.date) ? h('span', { class: 'badge-new', text: 'NEW' }) : null]),
+        h('h3', { class: 'news-title', text: n.title }),
+        n.body ? h('p', { class: 'news-body', text: n.body }) : null,
+        n.url ? h('a', { class: 'news-link', href: n.url, target: '_blank', rel: 'noopener noreferrer', text: '詳しくはこちら →' }) : null
+      ]);
+    }))]);
+  }
+
+  // ---------- 起動 ----------
+
+  function sessionExpired() {
+    storeClear();
+    state.data = null;
+    showLogin('ログインの有効期限が切れました。もう一度ログインしてください。');
+  }
+
+  function showBootError() {
+    var boot = $('boot');
+    boot.textContent = '';
+    boot.style.flexDirection = 'column';
+    boot.style.minHeight = '100vh';
+    boot.appendChild(h('p', { text: GENERAL_ERROR }));
+    var again = h('button', { class: 'btn retry', type: 'button', text: '再読み込み' });
+    again.addEventListener('click', function () { location.reload(); });
+    boot.appendChild(again);
+  }
+
+  var token = storeGet();
+  if (!token) {
+    showLogin('');
+  } else {
+    api({ action: 'data', token: token }).then(function (res) {
+      if (res.ok) { enter(res); return; }
+      if (res.error === 'auth') { storeClear(); showLogin(''); return; }
+      showBootError();
+    }).catch(showBootError);
+  }
+})();
+</script>
+</body>
+</html>
