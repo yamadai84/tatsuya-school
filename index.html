@@ -45,8 +45,10 @@
     min-height: 100vh;
     min-height: 100dvh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 24px;
     padding: 32px 16px;
     background: var(--black);
     overflow: hidden;
@@ -55,7 +57,7 @@
     position: absolute;
     inset: 0;
     background: url('https://storage.googleapis.com/studio-design-asset-files/projects/1YWjpKbMqm/s-939x1174_v-fs_webp_91c98703-a7fa-478e-b8bc-986b52932687.webp') center 20% / cover no-repeat;
-    opacity: .45;
+    opacity: .3;
     filter: blur(2px);
     transform: scale(1.03);
   }
@@ -66,9 +68,9 @@
     padding: 32px 28px;
     background: var(--white);
   }
-  .login-logo { display: block; width: 136px; height: auto; margin-bottom: 20px; }
-  .login-title { margin: 0; font-family: var(--latin); font-weight: 400; font-size: 34px; line-height: 1.15; letter-spacing: .01em; }
-  .login-sub { margin: 4px 0 24px; font-weight: 700; font-size: 14px; }
+  .login-logo { position: relative; width: min(240px, 62vw); margin: 0; line-height: 0; }
+  .login-logo img { display: block; width: 100%; height: auto; }
+  .login-sub { margin: 0 0 20px; font-weight: 900; font-size: 18px; line-height: 1.5; }
   .field { display: block; margin-bottom: 16px; }
   .field span { display: block; margin-bottom: 4px; font-weight: 700; font-size: 13px; }
   .field input {
@@ -99,37 +101,27 @@
   .login-help { margin: 16px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
 
   /* 共通レイアウト */
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: var(--gray);
-  }
+  .topbar { background: var(--black); color: var(--white); }
   .topbar-inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 12px;
     max-width: 880px;
-    height: 56px;
+    min-height: 48px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 8px 16px 0;
+    font-size: 12px;
   }
-  .topbar img { display: block; width: 112px; height: auto; }
-  .topbar-right { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 12px; }
   .member-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 500; }
-  .logout { flex: none; padding: 4px 10px; border: 1px solid var(--ink); background: transparent; font-size: 12px; cursor: pointer; }
-  .logout:hover { background: var(--ink); color: var(--white); }
+  .logout { flex: none; padding: 4px 10px; border: 1px solid var(--white); background: transparent; color: var(--white); font-size: 12px; cursor: pointer; }
+  .logout:hover { background: var(--white); color: var(--black); }
 
-  .hero {
-    background: var(--black);
-    color: var(--white);
-    padding: 22px 16px 20px;
-  }
-  .hero-inner { max-width: 848px; margin: 0 auto; }
-  .hero h1 { margin: 0; font-family: var(--latin); font-weight: 400; font-size: clamp(26px, 6vw, 40px); line-height: 1.15; letter-spacing: .01em; }
+  .hero { background: var(--black); padding: 4px 16px 20px; }
+  .hero h1 { margin: 0; line-height: 0; }
+  .hero img { display: block; width: min(180px, 48vw); height: auto; margin: 0 auto; }
 
-  .tabs { background: var(--black); border-top: 1px solid #333; }
+  .tabs { position: sticky; top: 0; z-index: 20; background: var(--black); border-top: 1px solid #333; }
   .tabs-inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 880px; margin: 0 auto; }
   .tab {
     position: relative;
@@ -307,9 +299,8 @@
 
 <section class="login" id="login" hidden>
   <div class="login-bg" aria-hidden="true"></div>
+  <h1 class="login-logo"><img src="assets/logo.png" alt="TATSUYA ONLINE SCHOOL"></h1>
   <form class="login-card" id="login-form" novalidate>
-    <img class="login-logo" src="https://storage.googleapis.com/studio-design-asset-files/projects/1YWjpKbMqm/s-942x214_v-fs_webp_b24bfc11-7308-4fd9-8b1e-be94d4cd9a66_small.webp" alt="スキルハック">
-    <h1 class="login-title">TATSUYA<br>ONLINE SCHOOL</h1>
     <p class="login-sub">会員サイト</p>
     <p class="error" id="login-error" role="alert" hidden></p>
     <label class="field">
@@ -329,14 +320,11 @@
 <div id="app" hidden>
   <header class="topbar">
     <div class="topbar-inner">
-      <img src="https://storage.googleapis.com/studio-design-asset-files/projects/1YWjpKbMqm/s-942x214_v-fs_webp_b24bfc11-7308-4fd9-8b1e-be94d4cd9a66_small.webp" alt="スキルハック">
-      <div class="topbar-right">
-        <span class="member-name" id="member-name"></span>
-        <button class="logout" id="logout" type="button">ログアウト</button>
-      </div>
+      <span class="member-name" id="member-name"></span>
+      <button class="logout" id="logout" type="button">ログアウト</button>
     </div>
   </header>
-  <div class="hero"><div class="hero-inner"><h1>TATSUYA ONLINE SCHOOL</h1></div></div>
+  <div class="hero"><h1><img src="assets/logo.png" alt="TATSUYA ONLINE SCHOOL"></h1></div>
   <nav class="tabs" aria-label="コンテンツ">
     <div class="tabs-inner">
       <a class="tab" href="#movie" data-tab="movie"><b>MOVIE</b><small>映像配信</small></a>
